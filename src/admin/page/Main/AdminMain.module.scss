@@ -3,7 +3,7 @@
   width:100%;
   margin: 0 auto;
   h2{
-    margin-top: 50px;
+    margin-top: 30px;
     text-align: center;
   }
   .filter-search-container{
@@ -24,13 +24,19 @@
     }
   }
 }
-
+.table-container{
+    overflow-x: auto;
+    height: 630px;
+    overflow-y: auto;
+}
 .table {
-  font-size: 1rem;
+  font-size: 0.875rem;
   width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   border-spacing: 0;
   th,td{
+    white-space: nowrap;
     padding: 8px;
     text-align: center;
     border-bottom: 1px solid #ddd;

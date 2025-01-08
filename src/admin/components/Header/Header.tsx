@@ -14,7 +14,9 @@ const Header: React.FC = () => {
         alignItems: "center",
       }}
     >
-      <div>헤더로고</div>
+      <div>
+        <img src={logo} alt="" style={{ width: "175px", padding: "10px" }} />
+      </div>
       <label
         style={{
           fontWeight: "bold",

@@ -1,11 +1,14 @@
 import React from "react";
-import styles from "./Login.module.scss"; // SCSS 모듈 가져오기
+import styles from "./Login.module.scss";
+import logo from "../../../assets/img/ml_sm_logo.png";
 
 const Login: React.FC = () => {
   return (
     <div className={styles.container}>
       <form className={styles["login-form"]}>
-        <h2>로그인</h2>
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <img src={logo} alt="" />
+        </div>
         <input
           type="text"
           placeholder="아이디"
