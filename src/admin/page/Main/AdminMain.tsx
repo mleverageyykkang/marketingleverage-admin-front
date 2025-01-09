@@ -5,7 +5,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import Pagination from "../../components/Pagination";
 import dayjs from "dayjs";
 const routes = [
-  { path: "/admin/main", name: "문의내역" },
+  { path: "/admin/inboundList", name: "인바운드 리스트" },
   { path: "/admin/settings", name: "설정" },
 ];
 const data: any = Array.from({ length: 50 }, (_, i) => ({
@@ -28,7 +28,7 @@ const data: any = Array.from({ length: 50 }, (_, i) => ({
   meeting: "X",
   visitType: "내방",
   mareProposal: "O",
-  mediaProposal: "네이버",
+  mediaProposal: "-",
   adProposal: "디스플레이",
   progress: "긍정",
   finalResult: "수주",
@@ -43,13 +43,23 @@ const data: any = Array.from({ length: 50 }, (_, i) => ({
 const AdminMain: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const pageSize = 15;
-  const currenPageData = data.slice((page - 1) * pageSize, page * pageSize);
   const [draggedColumnIndex, setDraggedColumnIndex] = useState<number | null>(
     null
   );
+  const [selectedFilter, setSelectedFilter] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  const filteredData = data.filter((row: any) => {
+    if (!selectedFilter) return true; // 필터가 선택되지 않은 경우 모든 데이터 표시
+    const value = row[selectedFilter]?.toString().toLowerCase() || ""; // 해당 열의 값
+    return value.includes(search.toLowerCase()); // 검색어로 필터링
+  });
+
+  const currenPageData = filteredData.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
   // group key-value를 통해서 이동 제한한
   const [columns, setColumns] = useState([
-    { id: "id", label: "순서", group: "auto" },
     { id: "inquiryDate", label: "문의일자", group: "auto" },
     { id: "inquiryTime", label: "문의시간", group: "auto" },
     { id: "name", label: "성함", group: "advertiser" },
@@ -125,16 +135,26 @@ const AdminMain: React.FC = () => {
       <div style={{ display: "flex" }}>
         <Sidebar routes={routes} />
         <div className={styles["admin-container"]}>
-          <h2>문의내역</h2>
+          <h2>인바운드 리스트</h2>
 
           {/* 필터 및 검색 영역 */}
           <div className={styles["filter-search-container"]}>
-            <select className="form-select" aria-label="문의 유형 선택">
-              <option value="">문의자</option>
-              <option value="name">이름</option>
-              <option value="ip">IP</option>
+            <select
+              aria-label="문의 유형 선택"
+              value={selectedFilter}
+              onChange={(e) => setSelectedFilter(e.target.value)}
+            >
+              <option value="defalut">필터 선택</option>
+              {columns.map((column) => (
+                <option value={column.id}>{column.label}</option>
+              ))}
             </select>
-            <input type="text" placeholder="검색어를 입력하세요." />
+            <input
+              type="text"
+              placeholder="검색어를 입력하세요."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
 
           {/* 테이블 */}
@@ -149,6 +169,7 @@ const AdminMain: React.FC = () => {
                   <th colSpan={1}>마케터</th>
                 </tr>
                 <tr>
+                  <th>순서</th>
                   {columns.map((column, index) => (
                     <th
                       key={column.id}
@@ -156,11 +177,6 @@ const AdminMain: React.FC = () => {
                       onDragStart={() => handleDragStart(index)}
                       onDragOver={handleDragOver}
                       onDrop={() => handleDrop(index)}
-                      style={{
-                        cursor: "grab",
-                        backgroundColor: "#f8f9fa",
-                        textAlign: "center",
-                      }}
                     >
                       {column.label}
                     </th>
@@ -171,11 +187,9 @@ const AdminMain: React.FC = () => {
                 {/* 예시 데이터 */}
                 {currenPageData.map((row: any, rowIndex: number) => (
                   <tr key={row.id}>
+                    <td>{row.id}</td>
                     {columns.map((column) => (
-                      <td
-                        key={`cell-${rowIndex}-${column.id}`}
-                        style={{ textAlign: "center" }}
-                      >
+                      <td key={`cell-${rowIndex}-${column.id}`}>
                         {column.id === "inquiryDate"
                           ? row[column.id]
                             ? dayjs(row[column.id]).format("YYYY-MM-DD")

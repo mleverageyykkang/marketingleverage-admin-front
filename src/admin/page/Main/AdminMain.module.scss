@@ -12,15 +12,16 @@
     align-items: center;
     margin-bottom: 1.5em;
     select, input{
-        border:1px solid #eee;
+      border:1px solid #eee;
     }
     select{
-        margin-right:10px;
-        height: 40px;
+      width: 90px;
+      margin-right:10px;
+      height: 40px;
     }
     input{
-        height: 36px;
-        width: 200px;
+      height: 36px;
+      width: 200px;
     }
   }
 }
@@ -28,7 +29,6 @@
     overflow-x: auto;
     height: 630px;
     overflow-y: auto;
-    border:1px solid #ccc;
 }
 .table {
   font-size: 0.875rem;
@@ -44,6 +44,7 @@
   }
   th{
     background-color: #f2f2f2;
+    cursor:grab;
   }
   tr:nth-child(even){
     background-color: #f9f9f9;
