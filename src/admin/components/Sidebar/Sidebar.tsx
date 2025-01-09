@@ -1,28 +1,35 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import styles from "./Sidebar.module.scss";
+import { NavLink } from "react-router-dom";
 
-const Sidebar: React.FC = () => {
+interface Route {
+  path: string;
+  name: string;
+}
+interface SidebarProps {
+  routes: Route[];
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ routes }) => {
   return (
     <div>
-      <div
-        style={{
-          minHeight: "calc(100vh - 75px)",
-          borderRight: "1px solid lightgrey",
-          width: "200px",
-          padding: "20px",
-          boxSizing: "border-box",
-        }}
-      >
+      <div className={styles["sidebar-container"]}>
         <nav>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            <li style={{ marginBottom: "10px", fontWeight: "bold" }}>
-              <Link
-                to="/admin/main"
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                문의내역
-              </Link>
-            </li>
+          <ul>
+            {routes.map((route, index) => (
+              <li key={index}>
+                <NavLink
+                  to={route.path}
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${styles["sidebar-link"]} ${styles["active"]}`
+                      : styles["sidebar-link"]
+                  }
+                >
+                  {route.name}
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </nav>
       </div>

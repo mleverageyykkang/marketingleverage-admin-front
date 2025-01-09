@@ -1,33 +1,16 @@
 import React from "react";
 import logo from "../../../assets/img/ml_logo.png";
 import { useNavigate } from "react-router-dom";
+import styles from "./Header.module.scss";
 
 const Header: React.FC = () => {
   const navigate = useNavigate(); // React Router v6의 useNavigate 사용
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        height: "75px",
-        backgroundColor: "lightgrey",
-        alignItems: "center",
-      }}
-    >
+    <div className={styles["header-container"]}>
       <div>
-        <img src={logo} alt="" style={{ width: "175px", padding: "10px" }} />
+        <img src={logo} alt="헤더로고고" />
       </div>
-      <label
-        style={{
-          fontWeight: "bold",
-          color: "white",
-          cursor: "pointer",
-          marginRight: "20px",
-        }}
-        onClick={() => navigate("/admin")}
-      >
-        로그아웃
-      </label>
+      <label onClick={() => navigate("/admin")}>로그아웃</label>
     </div>
   );
 };

@@ -1,0 +1,27 @@
+.sidebar-container{
+    min-height: calc(100vh - 75px);
+    border-right: 1px solid lightgrey;
+    width:200px;
+    padding: 20px;
+    box-sizing: border-box;
+    ul{
+        list-style: none;
+        padding: 0;
+        li{
+            margin-bottom: 10px;
+        }
+    }
+}
+.sidebar-link{
+    text-decoration: none;
+    color:black;
+    &:hover {
+        text-decoration: none;
+        color: orange;
+        font-weight: bold;
+    }
+    &.active { // 선택된 상태의 스타일
+        color: orange;
+        font-weight: bold;
+    }
+}

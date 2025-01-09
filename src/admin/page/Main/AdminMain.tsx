@@ -3,48 +3,127 @@ import styles from "./AdminMain.module.scss";
 import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Pagination from "../../components/Pagination";
+import dayjs from "dayjs";
+const routes = [
+  { path: "/admin/main", name: "문의내역" },
+  { path: "/admin/settings", name: "설정" },
+];
+const data: any = Array.from({ length: 50 }, (_, i) => ({
+  id: i + 1,
+  inquiryDate: "2025-01-01",
+  inquiryTime: "12:34",
+  name: "홍길동",
+  position: "팀장",
+  company: "ABC 회사",
+  phone: "010-1234-5678",
+  email: "example@example.com",
+  adType: "디스플레이 광고",
+  budget: 5000000,
+  website: "www.example.com",
+  inquiryContent: "문의 내용",
+  industry: "IT",
+  memo: "추가 메모",
+  kakaoOpened: "O",
+  emailReply: "O",
+  meeting: "X",
+  visitType: "내방",
+  mareProposal: "O",
+  mediaProposal: "네이버",
+  adProposal: "디스플레이",
+  progress: "긍정",
+  finalResult: "수주",
+  gptAnalysis: "GPT 분석 결과",
+  ip: "123.456.789",
+  keywords: "검색 키워드",
+  device: "PC",
+  media: "네이버",
+  detail: "상세",
+}));
+
 const AdminMain: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const pageSize = 15;
-  const data = Array.from({ length: 50 }, (_, i) => (
-    <tr key={i}>
-      <td>{i + 1}</td>
-      <td>2025-01-01</td>
-      <td>12:34</td>
-      <td>홍길동</td>
-      <td>팀장</td>
-      <td>ABC 회사</td>
-      <td>010-1234-5678</td>
-      <td>example@example.com</td>
-      <td>디스플레이 광고</td>
-      <td>500만 원</td>
-      <td>www.example.com</td>
-      <td>문의 내용</td>
-      <td>IT</td>
-      <td>추가 메모</td>
-      <td>O</td>
-      <td>O</td>
-      <td>X</td>
-      <td>내방</td>
-      <td>O</td>
-      <td>네이버</td>
-      <td>디스플레이</td>
-      <td>긍정</td>
-      <td>수주</td>
-      <td>GPT 분석 결과</td>
-      <td>123.456.789</td>
-      <td>검색 키워드</td>
-      <td>PC</td>
-      <td>네이버</td>
-      <td>상세</td>
-    </tr>
-  ));
   const currenPageData = data.slice((page - 1) * pageSize, page * pageSize);
+  const [draggedColumnIndex, setDraggedColumnIndex] = useState<number | null>(
+    null
+  );
+  // group key-value를 통해서 이동 제한한
+  const [columns, setColumns] = useState([
+    { id: "id", label: "순서", group: "auto" },
+    { id: "inquiryDate", label: "문의일자", group: "auto" },
+    { id: "inquiryTime", label: "문의시간", group: "auto" },
+    { id: "name", label: "성함", group: "advertiser" },
+    { id: "position", label: "직급", group: "advertiser" },
+    { id: "company", label: "업체명", group: "advertiser" },
+    { id: "phone", label: "연락처", group: "advertiser" },
+    { id: "email", label: "이메일", group: "advertiser" },
+    { id: "adType", label: "광고유형", group: "advertiser" },
+    { id: "budget", label: "광고예산", group: "advertiser" },
+    { id: "website", label: "홈페이지URL", group: "advertiser" },
+    { id: "inquiryContent", label: "문의내용", group: "advertiser" },
+    { id: "industry", label: "업종", group: "marketer" },
+    { id: "memo", label: "메모", group: "marketer" },
+    { id: "kakaoOpened", label: "카톡(문자) 개설(必)", group: "marketer" },
+    { id: "emailReply", label: "메일링 회신(必)", group: "marketer" },
+    { id: "meeting", label: "미팅 여부[ O / X ]", group: "marketer" },
+    { id: "visitType", label: "[ 내방 / 외근 ]", group: "marketer" },
+    {
+      id: "mareProposal",
+      label: "마레솔루션 제안 [ O / X ]	",
+      group: "marketer",
+    },
+    { id: "mediaProposal", label: "매체사 제안", group: "marketer" },
+    { id: "adProposal", label: "광고유형제안", group: "marketer" },
+    { id: "progress", label: "	진행여부(긍정/부정)", group: "marketer" },
+    {
+      id: "finalResult",
+      label: "최종 [ 수주 / 대기 / 실패 ]",
+      group: "marketer",
+    },
+    {
+      id: "gptAnalysis",
+      label: "원인/결과 분석 [ GPT 활용 ]",
+      group: "marketer",
+    },
+    { id: "ip", label: "IP 주소", group: "auto2" },
+    { id: "keywords", label: "전환키워드", group: "auto2" },
+    { id: "device", label: "PC/MO", group: "auto2" },
+    { id: "media", label: "매체", group: "auto2" },
+    { id: "detail", label: "상세", group: "marketer2" },
+  ]);
+
+  // HTML5 드래그앤드롭 방식 : Handle drag start
+  const handleDragStart = (index: number) => {
+    setDraggedColumnIndex(index);
+  };
+
+  // HTML5 드래그앤드롭 방식 : Handle drag over
+  const handleDragOver = (e: React.DragEvent<HTMLTableCellElement>) => {
+    e.preventDefault(); // Prevent default behavior to allow drop
+  };
+
+  // HTML5 드래그앤드롭 방식 : Handle drop
+  const handleDrop = (index: number) => {
+    if (
+      draggedColumnIndex === null ||
+      draggedColumnIndex === index ||
+      columns[draggedColumnIndex].group !== columns[index].group // 그룹내에서만 이동동
+    )
+      return;
+
+    const newColumns = [...columns];
+    const [draggedColumn] = newColumns.splice(draggedColumnIndex, 1);
+    newColumns.splice(index, 0, draggedColumn);
+
+    setColumns(newColumns);
+    setDraggedColumnIndex(null); // Reset dragged index
+  };
+
   return (
     <>
       <Header />
       <div style={{ display: "flex" }}>
-        <Sidebar />
+        <Sidebar routes={routes} />
         <div className={styles["admin-container"]}>
           <h2>문의내역</h2>
 
@@ -55,10 +134,7 @@ const AdminMain: React.FC = () => {
               <option value="name">이름</option>
               <option value="ip">IP</option>
             </select>
-            <input
-              type="text"
-              placeholder="검색어를 입력하세요."
-            />
+            <input type="text" placeholder="검색어를 입력하세요." />
           </div>
 
           {/* 테이블 */}
@@ -73,40 +149,42 @@ const AdminMain: React.FC = () => {
                   <th colSpan={1}>마케터</th>
                 </tr>
                 <tr>
-                  <th>순서</th>
-                  <th>문의일자</th>
-                  <th>문의시간</th>
-                  <th>성함</th>
-                  <th>직급</th>
-                  <th>업체명</th>
-                  <th>연락처</th>
-                  <th>이메일</th>
-                  <th>광고유형</th>
-                  <th>광고예산</th>
-                  <th>홈페이지 URL</th>
-                  <th>문의내용</th>
-                  <th>업종</th>
-                  <th>메모</th>
-                  <th>카톡(문자) 개설(必)</th>
-                  <th>메일링 회신(必)</th>
-                  <th>미팅 여부[ O / X ]</th>
-                  <th>[ 내방 / 외근 ]</th>
-                  <th>마레솔루션 제안 [ O / X ]</th>
-                  <th>매체사 제안</th>
-                  <th>광고유형 제안</th>
-                  <th>진행여부(긍정/부정)</th>
-                  <th>최종 [ 수주 / 대기 / 실패 ]</th>
-                  <th>원인/결과 분석 [ GPT 활용 ] </th>
-                  <th>IP 주소</th>
-                  <th>전환키워드</th>
-                  <th>PC/MO</th>
-                  <th>매체</th>
-                  <th>상세</th>
+                  {columns.map((column, index) => (
+                    <th
+                      key={column.id}
+                      draggable
+                      onDragStart={() => handleDragStart(index)}
+                      onDragOver={handleDragOver}
+                      onDrop={() => handleDrop(index)}
+                      style={{
+                        cursor: "grab",
+                        backgroundColor: "#f8f9fa",
+                        textAlign: "center",
+                      }}
+                    >
+                      {column.label}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {/* 예시 데이터 */}
-                {currenPageData}
+                {currenPageData.map((row: any, rowIndex: number) => (
+                  <tr key={row.id}>
+                    {columns.map((column) => (
+                      <td
+                        key={`cell-${rowIndex}-${column.id}`}
+                        style={{ textAlign: "center" }}
+                      >
+                        {column.id === "inquiryDate"
+                          ? row[column.id]
+                            ? dayjs(row[column.id]).format("YYYY-MM-DD")
+                            : "-"
+                          : row[column.id]?.toLocaleString()}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
