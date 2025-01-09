@@ -109,7 +109,7 @@ const AdminMain: React.FC = () => {
 
   // HTML5 드래그앤드롭 방식 : Handle drag over
   const handleDragOver = (e: React.DragEvent<HTMLTableCellElement>) => {
-    e.preventDefault(); // Prevent default behavior to allow drop
+    e.preventDefault();
   };
 
   // HTML5 드래그앤드롭 방식 : Handle drop
@@ -117,7 +117,7 @@ const AdminMain: React.FC = () => {
     if (
       draggedColumnIndex === null ||
       draggedColumnIndex === index ||
-      columns[draggedColumnIndex].group !== columns[index].group // 그룹내에서만 이동동
+      columns[draggedColumnIndex].group !== columns[index].group // 그룹내에서만 이동
     )
       return;
 
@@ -126,7 +126,7 @@ const AdminMain: React.FC = () => {
     newColumns.splice(index, 0, draggedColumn);
 
     setColumns(newColumns);
-    setDraggedColumnIndex(null); // Reset dragged index
+    setDraggedColumnIndex(null);
   };
 
   return (
