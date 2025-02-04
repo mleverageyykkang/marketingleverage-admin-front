@@ -1,5 +1,5 @@
 .admin-container {
-  max-width: 1600px;
+  max-width: 1720px;
   width:100%;
   margin: 0 auto;
   h2{
@@ -11,6 +11,7 @@
     justify-content: end;
     align-items: center;
     margin-bottom: 1.5em;
+    margin: 0 10px;
     select, input{
       border:1px solid #eee;
     }
@@ -29,6 +30,7 @@
     overflow-x: auto;
     height: 630px;
     overflow-y: auto;
+    margin: 10px;
 }
 .table {
   font-size: 0.875rem;

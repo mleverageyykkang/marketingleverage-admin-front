@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./Sidebar.module.scss";
 import { NavLink } from "react-router-dom";
+import logo from "../../../assets/img/ml_logo.png";
 
 interface Route {
   path: string;
@@ -14,6 +15,9 @@ const Sidebar: React.FC<SidebarProps> = ({ routes }) => {
   return (
     <div>
       <div className={styles["sidebar-container"]}>
+        <div>
+          <img src={logo} alt="헤더로고" />
+        </div>
         <nav>
           <ul>
             {routes.map((route, index) => (

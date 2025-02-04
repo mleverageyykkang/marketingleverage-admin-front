@@ -131,83 +131,85 @@ const AdminMain: React.FC = () => {
 
   return (
     <>
-      <Header />
       <div style={{ display: "flex" }}>
         <Sidebar routes={routes} />
-        <div className={styles["admin-container"]}>
-          <h2>인바운드 리스트</h2>
+        <div>
+          <Header />
+          <div className={styles["admin-container"]}>
+            <h2>인바운드 리스트</h2>
 
-          {/* 필터 및 검색 영역 */}
-          <div className={styles["filter-search-container"]}>
-            <select
-              aria-label="문의 유형 선택"
-              value={selectedFilter}
-              onChange={(e) => setSelectedFilter(e.target.value)}
-            >
-              <option value="defalut">필터 선택</option>
-              {columns.map((column) => (
-                <option value={column.id}>{column.label}</option>
-              ))}
-            </select>
-            <input
-              type="text"
-              placeholder="검색어를 입력하세요."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
+            {/* 필터 및 검색 영역 */}
+            <div className={styles["filter-search-container"]}>
+              <select
+                aria-label="문의 유형 선택"
+                value={selectedFilter}
+                onChange={(e) => setSelectedFilter(e.target.value)}
+              >
+                <option value="defalut">필터 선택</option>
+                {columns.map((column) => (
+                  <option value={column.id}>{column.label}</option>
+                ))}
+              </select>
+              <input
+                type="text"
+                placeholder="검색어를 입력하세요."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
 
-          {/* 테이블 */}
-          <div className={styles["table-container"]}>
-            <table className={styles["table"]}>
-              <thead>
-                <tr>
-                  <th colSpan={3}>자동</th>
-                  <th colSpan={9}>광고주 입력</th>
-                  <th colSpan={12}>마케터 입력</th>
-                  <th colSpan={4}>자동</th>
-                  <th colSpan={1}>마케터</th>
-                </tr>
-                <tr>
-                  <th>순서</th>
-                  {columns.map((column, index) => (
-                    <th
-                      key={column.id}
-                      draggable
-                      onDragStart={() => handleDragStart(index)}
-                      onDragOver={handleDragOver}
-                      onDrop={() => handleDrop(index)}
-                    >
-                      {column.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {/* 예시 데이터 */}
-                {currenPageData.map((row: any, rowIndex: number) => (
-                  <tr key={row.id}>
-                    <td>{row.id}</td>
-                    {columns.map((column) => (
-                      <td key={`cell-${rowIndex}-${column.id}`}>
-                        {column.id === "inquiryDate"
-                          ? row[column.id]
-                            ? dayjs(row[column.id]).format("YYYY-MM-DD")
-                            : "-"
-                          : row[column.id]?.toLocaleString()}
-                      </td>
+            {/* 테이블 */}
+            <div className={styles["table-container"]}>
+              <table className={styles["table"]}>
+                <thead>
+                  <tr>
+                    <th colSpan={3}>자동</th>
+                    <th colSpan={9}>광고주 입력</th>
+                    <th colSpan={12}>마케터 입력</th>
+                    <th colSpan={4}>자동</th>
+                    <th colSpan={1}>마케터</th>
+                  </tr>
+                  <tr>
+                    <th>순서</th>
+                    {columns.map((column, index) => (
+                      <th
+                        key={column.id}
+                        draggable
+                        onDragStart={() => handleDragStart(index)}
+                        onDragOver={handleDragOver}
+                        onDrop={() => handleDrop(index)}
+                      >
+                        {column.label}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {/* 예시 데이터 */}
+                  {currenPageData.map((row: any, rowIndex: number) => (
+                    <tr key={row.id}>
+                      <td>{row.id}</td>
+                      {columns.map((column) => (
+                        <td key={`cell-${rowIndex}-${column.id}`}>
+                          {column.id === "inquiryDate"
+                            ? row[column.id]
+                              ? dayjs(row[column.id]).format("YYYY-MM-DD")
+                              : "-"
+                            : row[column.id]?.toLocaleString()}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination
+              page={page}
+              totalCount={data.length}
+              setPage={setPage}
+              pageSize={pageSize}
+            />
           </div>
-          <Pagination
-            page={page}
-            totalCount={data.length}
-            setPage={setPage}
-            pageSize={pageSize}
-          />
         </div>
       </div>
     </>
